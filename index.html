@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Bella Tavola</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f8f3e8;
+  color: #263b2c;
+}
+header {
+  background: #203c2d;
+  color: #d6b66f;
+  text-align: center;
+  padding: 30px;
+}
+h1 { font: bold 38px Georgia, serif; }
+nav {
+  background: #172c20;
+  padding: 15px;
+  text-align: center;
+}
+nav a {
+  color: white;
+  margin: 10px;
+  text-decoration: none;
+}
+section {
+  max-width: 900px;
+  margin: auto;
+  padding: 25px 15px;
+}
+h2 {
+  text-align: center;
+  font-family: Georgia, serif;
+}
+button {
+  background: #203c2d;
+  color: white;
+  padding: 10px 14px;
+  border: 1px solid #c7a45b;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 4px;
+}
+.filtros { text-align: center; margin: 20px; }
+.pratos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+.prato {
+  background: white;
+  padding-bottom: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.prato img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+.prato h3, .prato p { margin: 12px; }
+.preco { color: #96712e; font-weight: bold; }
+.info {
+  background: white;
+  padding: 15px;
+  margin: 12px 0;
+  border-left: 4px solid #c7a45b;
+}
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 7px 0;
+  box-sizing: border-box;
+}
+#editor { display: none; background: white; padding: 15px; }
+footer {
+  background: #203c2d;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>La Bella Tavola</h1>
+  <p>Uma experiência de sabores italianos</p>
+</header>
+
+<nav>
+  <a href="#inicio">Início</a>
+  <a href="#cardapio">Cardápio</a>
+  <a href="#ia">Projeto com IA</a>
+</nav>
+
+<section id="inicio">
+  <h2>Benvenuti!</h2>
+  <p style="text-align:center">
+    Descubra os sabores da Itália com nossas massas,
+    pizzas e deliciosas sobremesas.
+  </p>
+</section>
+
+<section id="cardapio">
+  <h2>Nosso Cardápio</h2>
+
+  <div class="filtros">
+    <button onclick="filtrar('Todos')">Todos</button>
+    <button onclick="filtrar('Massas')">Massas</button>
+    <button onclick="filtrar('Pizzas')">Pizzas</button>
+    <button onclick="filtrar('Sobremesas')">Sobremesas</button>
+  </div>
+
+  <div class="pratos" id="lista"></div>
+
+  <p style="text-align:center">
+    <button onclick="novoPrato()">Adicionar prato</button>
+  </p>
+
+  <div id="editor">
+    <h3 id="titulo">Novo prato</h3>
+    <form id="form">
+      <input id="nome" placeholder="Nome do prato" required>
+      <input id="descricao" placeholder="Descrição" required>
+      <input id="preco" type="number" min="0" step="0.01"
+             placeholder="Preço em reais" required>
+      <select id="categoria">
+        <option>Massas</option>
+        <option>Pizzas</option>
+        <option>Sobremesas</option>
+      </select>
+      <input id="imagem" placeholder="Link da imagem (opcional)">
+      <button type="submit">Salvar</button>
+      <button type="button" onclick="fechar()">Cancelar</button>
+    </form>
+  </div>
+</section>
+
+<section id="ia">
+  <h2>Inteligência Artificial</h2>
+
+  <div class="info">
+    <strong>ChatGPT — Textos</strong>
+    <p>Criação de nomes e descrições dos pratos. Foi escolhido pela facilidade de uso.</p>
+  </div>
+
+  <div class="info">
+    <strong>Canva AI — Design</strong>
+    <p>Criação do visual e organização do cardápio. Possui ferramentas intuitivas.</p>
+  </div>
+
+  <div class="info">
+    <strong>Adobe Firefly — Imagens</strong>
+    <p>Geração de imagens ilustrativas dos pratos com inteligência artificial.</p>
+  </div>
+
+  <p><strong>Metodologia:</strong> as três ferramentas auxiliam na produção dos textos, do design e das imagens.</p>
+
+  <p><strong>Atualização:</strong> os pratos podem ser adicionados e editados pelo próprio cardápio. Nesta versão, as mudanças não ficam salvas após recarregar a página.</p>
+
+  <p><strong>Referências:</strong>
+    <a href="https://chatgpt.com/">ChatGPT</a> |
+    <a href="https://www.canva.com/">Canva</a> |
+    <a href="https://firefly.adobe.com/">Adobe Firefly</a>
+  </p>
+</section>
+
+<footer>La Bella Tavola | Projeto acadêmico de IA</footer>
+
+<script>
+let pratos = [
+  {
+    nome: "Spaghetti à Bolonhesa",
+    descricao: "Massa com molho de tomate e carne.",
+    preco: 39.90,
+    categoria: "Massas",
+    imagem: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500"
+  },
+  {
+    nome: "Pizza Margherita",
+    descricao: "Tomate, queijo e manjericão.",
+    preco: 45.90,
+    categoria: "Pizzas",
+    imagem: "https://images.unsplash.com/photo-1579751626657-72bc17010498?w=500"
+  },
+  {
+    nome: "Lasanha Italiana",
+    descricao: "Massa, molho e queijo.",
+    preco: 42.90,
+    categoria: "Massas",
+    imagem: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=500"
+  },
+  {
+    nome: "Tiramisù",
+    descricao: "Sobremesa italiana com café e cacau.",
+    preco: 19.90,
+    categoria: "Sobremesas",
+    imagem: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500"
+  }
+];
+
+let filtro = "Todos";
+let editando = -1;
+
+function filtrar(categoria) {
+  filtro = categoria;
+  mostrar();
+}
+
+function mostrar() {
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  pratos.forEach((p, i) => {
+    if (filtro !== "Todos" && p.categoria !== filtro) return;
+
+    const card = document.createElement("div");
+    card.className = "prato";
+
+    const img = document.createElement("img");
+    img.src = p.imagem || "https://placehold.co/500x300?text=Prato";
+    img.alt = p.nome;
+    img.onerror = () => {
+      img.onerror = null;
+      img.src = "https://placehold.co/500x300?text=Prato";
+    };
+
+    const nome = document.createElement("h3");
+    nome.textContent = p.nome;
+
+    const desc = document.createElement("p");
+    desc.textContent = p.descricao;
+
+    const preco = document.createElement("p");
+    preco.className = "preco";
+    preco.textContent = p.preco.toLocaleString("pt-BR", {
+      style: "currency", currency: "BRL"
+    });
+
+    const editar = document.createElement("button");
+    editar.textContent = "Editar";
+    editar.onclick = () => editarPrato(i);
+
+    const excluir = document.createElement("button");
+    excluir.textContent = "Excluir";
+    excluir.onclick = () => {
+      if (confirm("Excluir este prato?")) {
+        pratos.splice(i, 1);
+        mostrar();
+      }
+    };
+
+    card.append(img, nome, desc, preco, editar, excluir);
+    lista.appendChild(card);
+  });
+}
+
+function novoPrato() {
+  editando = -1;
+  document.getElementById("form").reset();
+  document.getElementById("titulo").textContent = "Novo prato";
+  document.getElementById("editor").style.display = "block";
+}
+
+function editarPrato(i) {
+  editando = i;
+  const p = pratos[i];
+  document.getElementById("nome").value = p.nome;
+  document.getElementById("descricao").value = p.descricao;
+  document.getElementById("preco").value = p.preco;
+  document.getElementById("categoria").value = p.categoria;
+  document.getElementById("imagem").value = p.imagem;
+  document.getElementById("titulo").textContent = "Editar prato";
+  document.getElementById("editor").style.display = "block";
+  document.getElementById("editor").scrollIntoView();
+}
+
+function fechar() {
+  document.getElementById("editor").style.display = "none";
+}
+
+document.getElementById("form").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const p = {
+    nome: document.getElementById("nome").value,
+    descricao: document.getElementById("descricao").value,
+    preco: Number(document.getElementById("preco").value),
+    categoria: document.getElementById("categoria").value,
+    imagem: document.getElementById("imagem").value
+  };
+
+  if (editando === -1) pratos.push(p);
+  else pratos[editando] = p;
+
+  filtro = "Todos";
+  mostrar();
+  fechar();
+  this.reset();
+});
+
+mostrar();
+</script>
+</body>
+</html>
